@@ -5,6 +5,7 @@
 #include "ftpclient.h"
 #include <QListWidgetItem>
 #include <QMessageBox>
+#include <QFont>
 
 namespace Ui {
 class ClientWindow;
@@ -37,6 +38,9 @@ private:
     QDir remoteDir;
     void listLocalFile();
     void listRemoteFile();
+
+    QFont defaultFileFont = QFont("Microsoft YaHei Ui", 9, QFont::Normal);
+    QFont defaultDirFont = QFont("Microsoft YaHei Ui", 9, QFont::Bold);
 
 };
 

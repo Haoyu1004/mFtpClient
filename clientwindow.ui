@@ -100,7 +100,13 @@
      <widget class="QListWidget" name="listWidget_local"/>
     </item>
     <item row="2" column="2" colspan="2">
-     <widget class="QListWidget" name="listWidget_remote"/>
+     <widget class="QListWidget" name="listWidget_remote">
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei UI</family>
+       </font>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

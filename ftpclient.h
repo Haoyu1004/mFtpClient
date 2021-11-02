@@ -44,8 +44,8 @@ private:
     void setTransferType(transferType type);
     qsizetype getFileSize(QString filename);
 
-    static const qsizetype BUFFER_SIZE = 1024;
-    static const uint TIMEOUT_MS = 1000;
+    static const qsizetype BUFFER_SIZE = 16*1024;
+    static const uint TIMEOUT_MS = 2000;
 
 private slots:
     void socketConnected();

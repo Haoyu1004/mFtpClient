@@ -16,7 +16,7 @@ void FtpClient::sendCommand(QString cmd)
 {
     QByteArray rawcmd = cmd.toLatin1() + "\r\n";
     ctrl->write(rawcmd);
-    ctrl->waitForReadyRead(TIMEOUT_MS);
+    ctrl->waitForReadyRead();
 }
 
 void FtpClient::socketConnected()
@@ -63,8 +63,8 @@ void FtpClient::openCSocket(QString hostname, QString username, QString password
 
     if(ctrl->state() != QTcpSocket::ConnectedState) {
         ctrl->connectToHost(save_hostname, 21);
-        ctrl->waitForConnected(TIMEOUT_MS);
-        ctrl->waitForReadyRead(TIMEOUT_MS);
+        ctrl->waitForConnected();
+        ctrl->waitForReadyRead();
         qDebug() << "reading reply code" << replyCode;
         if(replyCode != 220) {
             return;
@@ -159,7 +159,7 @@ QString FtpClient::getFileList(QDir dir)
         qDebug() << "list file fail";
     }
 
-    data->waitForReadyRead(TIMEOUT_MS);
+    data->waitForReadyRead();
     QByteArray rawReply = data->readAll();
     QString dataReply = QString::fromLocal8Bit(rawReply);
     qDebug() << "DSocket Received: (decoded) \n" << dataReply;
@@ -190,7 +190,7 @@ void FtpClient::openDSocket()
     }
 
     data->connectToHost(hostname, port);
-    data->waitForConnected(TIMEOUT_MS);
+    data->waitForConnected();
     if(data->state() != QTcpSocket::ConnectedState) { // to be spcified
         qDebug() << "data socket connection failed";
         return;
@@ -236,26 +236,30 @@ qsizetype FtpClient::getFileSize(QString filename)
     }
 }
 
+void FtpClient::downloadFile(QDir localDir, QString localFileName, QString remoteFileName)
+{
+    checkCSocket();
+
+}
+
 void FtpClient::uploadFile(QDir localDir, QString fileName)
 {
     checkCSocket();
+
+    QDir filePath = localDir.filePath(fileName);
+    QFile *localFile = new QFile(filePath.absolutePath());
+
+    if(!localFile->exists() || !localFile->open(QFile::ReadOnly)) {
+        qDebug() << "upload fail: cannot open local file";
+        delete localFile;
+        return;
+    }
+
     if(getFileSize(fileName) != -1) {   // filename exists in remote server
 
         qDebug() << "file already exist in remote server";
         return;
     } else {
-
-        assert(data->state() == QTcpSocket::UnconnectedState);
-
-        QDir filePath = localDir.filePath(fileName);
-        QFile *localFile = new QFile(filePath.absolutePath());
-
-        if(!localFile->exists() || !localFile->open(QFile::ReadOnly)) {
-            qDebug() << "upload fail: cannot open local file";
-            delete localFile;
-            return;
-        }
-
         setTransferType(binary);
 
         openDSocket();
@@ -281,12 +285,12 @@ void FtpClient::uploadFile(QDir localDir, QString fileName)
         delete localFile;
         closeDSocket();
 
+        ctrl->waitForReadyRead();
         if (!(replyCode == 226) && !(replyCode == 250)) {   // 226
             qDebug() << "upload fail(?): no control reply after upload";
         }
 
         setTransferType(ascii);
-
     }
 
     qDebug() << "ctrl reaches end of uploadFile()";

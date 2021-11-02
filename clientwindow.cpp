@@ -40,17 +40,58 @@ void ClientWindow::on_pushButton_download_clicked()
 
 void ClientWindow::listLocalFile()
 {
-    QStringList fileList = localDir.entryList();
+    QFileInfoList infoList = localDir.entryInfoList();
     ui->listWidget_local->clear();
-    ui->listWidget_local->addItems(fileList);
+//    ui->listWidget_local->addItems(fileList);
+
+    for(int row = 0; row < infoList.size(); ++row) {
+        QFileInfo &fileinfo = infoList[row];
+
+        ui->listWidget_local->addItem(fileinfo.fileName());
+        if(fileinfo.isDir()) {
+            ui->listWidget_local->item(row)->setFont(defaultDirFont);
+        }
+    }
 }
 
 void ClientWindow::listRemoteFile()
 {
     QStringList fileList = ftp->getFileList(remoteDir).split("\r\n");
     ui->listWidget_remote->clear();
-    ui->listWidget_remote->addItems(fileList);
+//    ui->listWidget_remote->addItems(fileList);
 
+    ui->listWidget_remote->addItem(".");
+    ui->listWidget_remote->item(0)->setFont(defaultDirFont);
+    ui->listWidget_remote->addItem("..");
+    ui->listWidget_remote->item(1)->setFont(defaultDirFont);
+
+    for(int row = 2; row < 2 + fileList.size(); ++row) {
+        QString &fileinfo = fileList[row-2];
+
+        if(fileinfo == "") {
+            continue;
+        }
+        QTextStream fileinfoStream(&fileinfo);
+
+        QString autority, _1, _ftp1, _ftp2, filesize,  month, date, clock_year,fileName;
+        fileinfoStream >> autority >> _1 >> _ftp1 >> _ftp2 >> filesize >> month >> date >> clock_year;
+
+        fileName = fileinfoStream.readAll();
+
+        ui->listWidget_remote->addItem(fileName);
+        if(autority[0] == 'd') {
+            ui->listWidget_remote->item(row)->setFont(defaultDirFont);
+        }
+
+    }
+    /* "LIST" recive reply like
+     *
+     * -rw-rw-rw- 1 ftp ftp      1020264448 May 23 11:53 CentOS-7-x86_64-Minimal-2009.iso\r\n
+     * -rw-rw-rw- 1 ftp ftp            1448 Dec 02  2020 BOOTEX.LOG\r\n
+     * drwxrwxrwx 1 ftp ftp               0 Oct 11 12:41 Windows 10 x64
+     * -rw-rw-rw- 1 ftp ftp      2193522688 Sep 11  2020 ubuntu-18.04.5-desktop-amd64.iso
+     * drwxrwxrwx 1 ftp ftp               0 Oct 11 12:47 Ubuntu 18.04 64bit
+    */
 }
 
 
