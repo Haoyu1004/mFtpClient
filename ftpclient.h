@@ -16,8 +16,9 @@ public:
     void logout();
 
     bool chDir(QDir dir);
-    void mkDir(QDir dir);
-    void rmDir(QDir dir);
+    bool mkDir(QDir dir);
+    bool rmDir(QDir dir);
+    bool rmFile(QDir dir);
     QDir getDir();
     QString getFileList(QDir dir);
 

@@ -29,6 +29,9 @@ private slots:
     void on_pushButton_localdir_clicked();
     void on_pushButton_remotedir_clicked();
 
+    void on_pushButton_remoteDel_clicked();
+
+    void on_pushButton_localDel_clicked();
 
 private:
     Ui::ClientWindow *ui;

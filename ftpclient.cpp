@@ -112,7 +112,7 @@ bool FtpClient::checkCSocket()
 bool FtpClient::chDir(QDir dir)
 {
     checkCSocket();
-    sendCommand("CWD " + dir.absolutePath());
+    sendCommand("CWD " + dir.path());
     if(replyCode != 250) {
         qDebug() << "chDir fail";
         return false;
@@ -120,22 +120,37 @@ bool FtpClient::chDir(QDir dir)
     return true;
 }
 
-void FtpClient::mkDir(QDir dir)
+bool FtpClient::mkDir(QDir dir)
 {
     checkCSocket();
-    sendCommand("MKD " + dir.absolutePath());
+    sendCommand("MKD " + dir.path());
     if(replyCode != 257) {
         qDebug() << "mkDir fail";
+        return false;
     }
+    return true;
 }
 
-void FtpClient::rmDir(QDir dir)
+bool FtpClient::rmDir(QDir dir)
 {
     checkCSocket();
-    sendCommand("RMD " + dir.absolutePath());
+    sendCommand("RMD " + dir.path());
     if(replyCode != 250) {
         qDebug() << "rmDir fail";
+        return false;
     }
+    return true;
+}
+
+bool FtpClient::rmFile(QDir dir)
+{
+    checkCSocket();
+    sendCommand("DELE " + dir.path());
+    if(replyCode != 250) {
+        qDebug() << "rmDir fail";
+        return false;
+    }
+    return true;
 }
 
 QDir FtpClient::getDir()
@@ -155,7 +170,7 @@ QString FtpClient::getFileList(QDir dir)
     checkCSocket();
     openDSocket();
 
-    sendCommand("LIST " + dir.absolutePath());
+    sendCommand("LIST " + dir.path());
     if(replyCode != 150 && replyCode != 125 && replyCode != 226) { // to be spcified
         qDebug() << "list file fail";
     }
@@ -249,7 +264,7 @@ void FtpClient::downloadFile(QDir localDir, QString fileName)
     }
 
     QDir filePath = localDir.filePath(fileName);
-    QFile *localFile = new QFile(filePath.absolutePath());
+    QFile *localFile = new QFile(filePath.path());
 
     if(localFile->exists()) {       // filename exist in local disk
 
@@ -316,7 +331,7 @@ void FtpClient::uploadFile(QDir localDir, QString fileName)
     checkCSocket();
 
     QDir filePath = localDir.filePath(fileName);
-    QFile *localFile = new QFile(filePath.absolutePath());
+    QFile *localFile = new QFile(filePath.path());
 
     if(!localFile->exists() || !localFile->open(QFile::ReadOnly)) {     // file does not exist in local disk
         qDebug() << "upload fail: cannot open local file";

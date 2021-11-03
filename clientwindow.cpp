@@ -124,15 +124,22 @@ void ClientWindow::listRemoteFile()
 
 void ClientWindow::on_listWidget_local_itemDoubleClicked(QListWidgetItem *item)
 {
-    qDebug() << "local clickkkkkkkk" << item;
+    QString targetDir = item->text();
+    if(localDir.cd(targetDir)) {
+        ui->lineEdit_localDir->setText(localDir.absolutePath());
+        listLocalFile();
+    }
 }
-
 
 void ClientWindow::on_listWidget_remote_itemDoubleClicked(QListWidgetItem *item)
 {
-    qDebug() << "remote clickkkkkk " << item;
+    QString targetFullDir = remoteDir.filePath(item->text());
+    if(ftp->chDir(targetFullDir)) {
+        remoteDir = ftp->getDir();
+        ui->lineEdit_remoteDir->setText(remoteDir.path());
+        listRemoteFile();
+    }
 }
-
 
 void ClientWindow::on_pushButton_localdir_clicked()
 {
@@ -159,5 +166,48 @@ void ClientWindow::on_pushButton_remotedir_clicked()
         QString criticalInfo = "Target remote directory " + targetDir.path() + " does not exist.";
         QMessageBox::critical(this, "Criticle", criticalInfo);
     }
+}
+
+void ClientWindow::on_pushButton_remoteDel_clicked()
+{
+    QListWidgetItem *currentItem = ui->listWidget_remote->currentItem();
+    if(currentItem == nullptr) {
+        return;
+    }
+    QString fileName = currentItem->text();
+
+    QString info = "Are you sure to delete \"" + fileName + " ?";
+    if(QMessageBox::information(this, "Remove", info, QMessageBox::Yes | QMessageBox::No)
+            == QMessageBox::No)
+    {
+        return;
+    }
+
+    if(!ftp->rmFile(fileName) && !ftp->rmDir(fileName)) {
+        QMessageBox::warning(this, "Remove", "Cannot Remove " + fileName + " .");
+    }
+    listRemoteFile();
+}
+
+
+void ClientWindow::on_pushButton_localDel_clicked()
+{
+    QListWidgetItem *currentItem = ui->listWidget_local->currentItem();
+    if(currentItem == nullptr) {
+        return;
+    }
+    QString fileName = currentItem->text();
+
+    QString info = "Are you sure to delete \"" + fileName + " ?";
+    if(QMessageBox::information(this, "Remove", info, QMessageBox::Yes | QMessageBox::No)
+            == QMessageBox::No)
+    {
+        return;
+    }
+
+    if(!localDir.remove(fileName) && !localDir.rmdir(fileName)) {
+        QMessageBox::warning(this, "Remove", "Cannot Remove " + fileName + " .");
+    }
+    listLocalFile();
 }
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>480</height>
+    <width>846</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,27 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Local</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QLabel" name="label_2">
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="text">
-       <string>Remote</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLineEdit" name="lineEdit_localDir"/>
-    </item>
-    <item row="1" column="1">
+    <item row="1" column="4">
      <widget class="QPushButton" name="pushButton_localdir">
       <property name="enabled">
        <bool>true</bool>
@@ -57,10 +37,74 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QLineEdit" name="lineEdit_remoteDir"/>
+    <item row="2" column="5" colspan="5">
+     <widget class="QListWidget" name="listWidget_remote">
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei UI</family>
+       </font>
+      </property>
+     </widget>
     </item>
-    <item row="1" column="3">
+    <item row="3" column="5">
+     <widget class="QPushButton" name="pushButton_download">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Download</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="4">
+     <widget class="QLineEdit" name="lineEdit_localDir"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="pushButton_upload">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Upload</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Local</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QPushButton" name="pushButton_localDel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="9">
      <widget class="QPushButton" name="pushButton_remotedir">
       <property name="maximumSize">
        <size>
@@ -73,8 +117,11 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QPushButton" name="pushButton_upload">
+    <item row="1" column="5" colspan="4">
+     <widget class="QLineEdit" name="lineEdit_remoteDir"/>
+    </item>
+    <item row="3" column="7">
+     <widget class="QPushButton" name="pushButton_localMkDir">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -82,51 +129,45 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>upload</string>
+       <string>New Folder</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="2">
-     <widget class="QPushButton" name="pushButton_download">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+    <item row="0" column="5">
+     <widget class="QLabel" name="label_2">
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="text">
-       <string>download</string>
+       <string>Remote</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="2">
+    <item row="3" column="6">
+     <widget class="QPushButton" name="pushButton_remoteDel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="5">
      <widget class="QListWidget" name="listWidget_local"/>
     </item>
-    <item row="2" column="2" colspan="2">
-     <widget class="QListWidget" name="listWidget_remote">
-      <property name="font">
-       <font>
-        <family>Microsoft YaHei UI</family>
-       </font>
+    <item row="3" column="2">
+     <widget class="QPushButton" name="pushButton_remoteMkDir">
+      <property name="text">
+       <string>New Folder</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
