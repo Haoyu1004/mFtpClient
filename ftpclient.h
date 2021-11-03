@@ -21,7 +21,7 @@ public:
     QDir getDir();
     QString getFileList(QDir dir);
 
-    void downloadFile(QDir localDir, QString localFileName, QString remoteFileName);
+    void downloadFile(QDir localDir, QString fileName);
     void uploadFile(QDir localDir, QString fileName);
 
 private:

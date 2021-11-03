@@ -27,7 +27,11 @@ ClientWindow::~ClientWindow()
 
 void ClientWindow::on_pushButton_upload_clicked()
 {
-    QString fileName = ui->listWidget_local->currentItem()->text();
+    QListWidgetItem *currentItem = ui->listWidget_local->currentItem();
+    if(currentItem == nullptr) {
+        return;
+    }
+    QString fileName = currentItem->text();
     ftp->uploadFile(localDir, fileName);
     listRemoteFile();
 }
@@ -35,11 +39,35 @@ void ClientWindow::on_pushButton_upload_clicked()
 
 void ClientWindow::on_pushButton_download_clicked()
 {
-    QMessageBox::information(this, "info", ui->listWidget_remote->currentItem()->text());
+    QListWidgetItem *currentItem = ui->listWidget_remote->currentItem();
+    if(currentItem == nullptr) {
+        return;
+    }
+    QString fileName = currentItem->text();
+    ftp->downloadFile(localDir, fileName);
+    listLocalFile();
 }
 
 void ClientWindow::listLocalFile()
 {
+    QDir temp(localDir.path());
+    localDir = temp;
+
+   /*
+    * The information of a QDir is fixed when creating it
+    * so that "localDir.entryInfoList()" will not change
+    * synchronously to the disk.
+    *
+    * To implement it, we create a new QDir from "the path"
+    * of localdir so that its information is newly read.
+    *
+    * Notice that copy construction "QDir temp(localDir);"
+    * cannot achieve it, since that constructs from infos
+    * read when "localDir" creates.
+    *
+    * StackOverFlow suggest using "QFileSystemWatcher" instead.
+    */
+
     QFileInfoList infoList = localDir.entryInfoList();
     ui->listWidget_local->clear();
 //    ui->listWidget_local->addItems(fileList);
@@ -74,22 +102,21 @@ void ClientWindow::listRemoteFile()
         QTextStream fileinfoStream(&fileinfo);
 
         QString autority, _1, _ftp1, _ftp2, filesize,  month, date, clock_year,fileName;
-        fileinfoStream >> autority >> _1 >> _ftp1 >> _ftp2 >> filesize >> month >> date >> clock_year;
+        fileinfoStream >> autority >> _1 >> _ftp1 >> _ftp2 >> filesize >> month >> date >> clock_year >> fileName;
 
-        fileName = fileinfoStream.readAll();
+        fileName += fileinfoStream.readAll();
 
         ui->listWidget_remote->addItem(fileName);
         if(autority[0] == 'd') {
             ui->listWidget_remote->item(row)->setFont(defaultDirFont);
         }
-
     }
-    /* "LIST" recive reply like
+    /* "LIST" command recive reply like
      *
      * -rw-rw-rw- 1 ftp ftp      1020264448 May 23 11:53 CentOS-7-x86_64-Minimal-2009.iso\r\n
      * -rw-rw-rw- 1 ftp ftp            1448 Dec 02  2020 BOOTEX.LOG\r\n
-     * drwxrwxrwx 1 ftp ftp               0 Oct 11 12:41 Windows 10 x64
-     * -rw-rw-rw- 1 ftp ftp      2193522688 Sep 11  2020 ubuntu-18.04.5-desktop-amd64.iso
+     * drwxrwxrwx 1 ftp ftp               0 Oct 11 12:41 Windows 10 x64\r\n
+     * -rw-rw-rw- 1 ftp ftp      2193522688 Sep 11  2020 ubuntu-18.04.5-desktop-amd64.iso\r\n
      * drwxrwxrwx 1 ftp ftp               0 Oct 11 12:47 Ubuntu 18.04 64bit
     */
 }

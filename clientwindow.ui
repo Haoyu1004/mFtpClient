@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>612</width>
-    <height>540</height>
+    <width>800</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,6 +24,9 @@
     </item>
     <item row="0" column="2">
      <widget class="QLabel" name="label_2">
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
       <property name="text">
        <string>Remote</string>
       </property>
@@ -91,6 +94,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
       <property name="text">
        <string>download</string>
       </property>
@@ -115,7 +121,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>612</width>
+     <width>800</width>
      <height>25</height>
     </rect>
    </property>
